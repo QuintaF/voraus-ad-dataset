@@ -1,96 +1,121 @@
-# voraus-AD Dataset
+# Anomaly Detection with MVT-Flow
 
-This is the official repository to the paper [**"The voraus-AD Dataset for Anomaly Detection in Robot Applications"**](https://arxiv.org/pdf/2311.04765.pdf) by Jan Thieß Brockmann, Marco Rudolph, Bodo Rosenhahn, and Bastian Wandt which is accepted to IEEE Transactions on Robotics and will be officially published soon.
+**IMPORTANT**: This readme is only helpful to the training on the new datasets(Pepper and SWaT). Before further reading be sure to check the [original README](originalREADME.md). Since none of the original files has been modified, instructions can be followed to the letter even after installing this repository. Check correctness for the path pointing to voraus dataset files in [train.py](train.py) at line 21 (before proceeding make sure that tests end successfully).
 
-We introduce the **voraus-AD dataset**, a novel dataset for **anomaly detection** in robotic applications as well as an unsupervised method **MVT-Flow** which finds anomalies on **time series of robotic machine data** without having some of them in the training set.
+This project aims to tests the performance of the normalizing flow method MVT-Flow on datasets different from the one it has been designed on. More informations in the official paper ["The voraus-AD Dataset for Anomaly Detection
+in Robot Applications"](https://arxiv.org/pdf/2311.04765.pdf).\
+For a step-by-step configuration guide follow the [original README](originalREADME.md) guide.
 
-[**Download the Dataset 100 Hz** ](https://media.vorausrobotik.com/voraus-ad-dataset-100hz.parquet)    
-(~1,1 GB Disk / ~2.5 GB RAM) - used in this repository
+## Usage: Train
 
-[**Download the Dataset 500 Hz**](https://media.vorausrobotik.com/voraus-ad-dataset-500hz.parquet)    
-(~5.3 GB Disk / ~12.5 GB RAM)
+Dataset files are searched starting from the *CWD*, which is expected to end as *".../voraus-ad-dataset/"*
 
-**Please note:** The datasets in both the 100 Hz and 500 Hz variants are licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/) (CC BY-NC-SA 4.0).
+### Voraus Training
+```
+usage: train.py
+```
+More info on the original README
 
-## Getting Started
+### SWaT & Pepper Training
 
-You will need [Python 3.9](https://www.python.org/downloads/) and the packages specified in requirements.txt. We recommend setting up a [virtual environment with pip](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/) and installing the packages there.
-
-Install packages with:
-
-```shell
-python3.9 -m venv venv
-source venv/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt
+```
+usage: train_custom.py [-h] [--seed SEED] [--dataset {pepper,swat,voraus}] [--ratio RATIO] [--normalize] [--downsample] [--plot]
 ```
 
-## Configure and Run
+Usage options:
 
-Set the variable `DATASET_PATH` in [train.py](train.py) to the path of the downloaded dataset file.
-The variable `configuration` contains the training configuration as well as the hyperparameters of the model. The paper describes all the configuration parameters in detail. Make also sure to execute the tests before training. The test `test_train` may take a few minutes depending on your setup.
-
-```shell
-pytest
+```
+optional arguments:
+  -h, --help            show this help message and exit
+  --seed SEED, -sd SEED
+                        choose the seed for rng functions in the code
+  --dataset {pepper,swat,voraus}, -dt {pepper,swat,voraus}
+                        choose which dataset to load
+  --ratio RATIO, -rt RATIO
+                        a ratio between 0.4 and 0.8 for deciding how large the training set will be
+  --normalize, -n       if set, data is normalized
+  --downsample, -ds     if set, data is downsampled(only for SWaT dataset)
+  --plot, -plt          if set, metric plots are shown(only for model evaluation)
 ```
 
-The [train.py](train.py) is entrypoint to this repository, it contains the configuration, training and validation steps for our model. The default configuration will run a training with **paper-given parameters** on the provided voraus-AD dataset (@100 Hz).
-To start the training, just run [train.py](train.py)! 
+### Default Execution
+The default execution trains on pepper datasets with no normalization nor downsampling, the default seed is 177 and the normal data used for training constitutes 80% of the dataset(ratio=.8).
 
-```shell
-python train.py
+N.B. using voraus as dataset option for custom training does not work
+
+
+## Usage: Evaluation
+Dataset files are searched starting from the *CWD*, which is expected to end as *".../voraus-ad-dataset/"*
+
+```
+usage: train_custom.py [-h] [--seed SEED] [--dataset {pepper,swat,voraus}] [--ratio RATIO] [--normalize] [--downsample] [--plot]
 ```
 
-If training on the voraus-AD data does not lead to an AUROC greater 0.9, something seems to be wrong. Don't be worried if the loss is negative. The loss reflects the negative log likelihood which may be negative.
-Please report us if you have issues when using the code.
+Usage options:
 
-
-## Devlopment
-
-We are using the following tools during development:
-
-- [isort](https://github.com/pycqa/isort/) for import sorting
-- [black](https://github.com/psf/black) for code formatting
-- [mypy](https://github.com/python/mypy) for static typing
-- [pylint](https://github.com/pylint-dev/pylint) for static code analysis (linting)
-- [pydocstyle](https://github.com/PyCQA/pydocstyle) for Docstring style checking 
-- [pytest](https://github.com/pytest-dev/pytest/) for (unit) testing
-- [tox](https://github.com/tox-dev/tox) for test automation
-
-Before commiting make sure to format your code with:
-
-```shell
-isort .
-black .
+```
+optional arguments:
+  -h, --help            show this help message and exit
+  --seed SEED, -sd SEED
+                        choose the seed for rng functions in the code
+  --dataset {pepper,swat,voraus}, -dt {pepper,swat,voraus}
+                        choose which dataset to load
+  --ratio RATIO, -rt RATIO
+                        a ratio between 0.4 and 0.8 for deciding how large the training set will be
+  --normalize, -n       if set, data is normalized
+  --downsample, -ds     if set, data is downsampled(only for SWaT dataset)
+  --plot, -plt          if set, metric plots are shown(only for model evaluation)
 ```
 
-And execute all checks using the following command:
+### Default Execution
+The default execution evaluates pepper dataset with no normalization nor downsampling, the default seed is 177 and the normal data used for evaluation constitutes 20% of the dataset(ratio=.8).
 
-```shell
-tox
+## Repository Structure
 ```
+voraus-ad-dataset/ 
+├── Dataset/
+│   └── Voraus dataset files
+│
+├── Pepper & SWAT/
+│   ├── Pepper normal and attack csv files
+│   └── SWaT normal and attack files, both original xlsx and modified csv
+│
+├── tests/
+│    └── read the original README
+│
+└── python files
+```
+----
 
-**Note:** Running **tox** the first time takes a few minutes since tox creates new virtual environments for linting and testing. The following **tox** executions are much faster.
-
-## Credits
-
-Some code of the [FrEIA framework](https://github.com/VLL-HD/FrEIA) was used for the implementation of Normalizing Flows. Follow [their tutorial](https://github.com/VLL-HD/FrEIA) if you need more documentation about it.
-
-
-## Citation
-
-Please cite our paper in your publications if it helps your research.
-
-    @article { BroRud2023,
-      author = {Jan Thie{\"s} Brockmann and Marco Rudolph and Bodo Rosenhahn and Bastian Wandt},
-      title = {The voraus-AD Dataset for Anomaly Detection in Robot Applications},
-      journal = {Transactions on Robotics},
-      year = {2023},
-      month = nov
-    }
+## Hyperparameters
 
 
-## License Notices
+The parameters to configure the environment and those to modify the execution of the algorithm (located at the top of the training file after imports).
 
-The **content of this repository** is licensed under the [MIT License](https://opensource.org/license/mit/).   
-The **datasets** are licensed under the [CC BY-NC-SA 4.0 License](https://creativecommons.org/licenses/by-nc-sa/4.0/). 
+```python
+# Define the model training configuration and hyperparameters.
+configuration = Configuration(
+    columns="machine",  #only for voraus dataset
+    epochs=70,
+    frequencyDivider=1, #only for voraus dataset
+    trainGain=1.0,      #only for voraus dataset
+    seed=177,
+    batchsize=32,
+    nCouplingBlocks=4,
+    clamp=1.2,
+    learningRate=8e-4,
+    normalize=True,    
+    pad=True,           #only for voraus dataset
+    nHiddenLayers=0,
+    scale=2,
+    kernelSize1=13,
+    dilation1=2,
+    kernelSize2=1,
+    dilation2=1,
+    kernelSize3=1,
+    dilation3=1,
+    milestones=[11, 61],
+    gamma=0.1,
+)
+```
+    

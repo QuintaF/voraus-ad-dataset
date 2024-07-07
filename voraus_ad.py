@@ -692,8 +692,9 @@ def extract_samples_and_labels(
     dfs = [dataset[dataset["sample"] == s].reset_index(drop=True) for s in samples]
     labels = [df.loc[0, meta_columns].to_dict() for df in dfs]
     dfs = [df.drop(columns=meta_columns) for df in dfs]
-    return dfs, labels
 
+    return dfs, labels
+    
 
 # Disable pylint too many locals for better readability of the loading function.
 def load_pandas_dataframes(  # pylint: disable=too-many-locals, too-complex
