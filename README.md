@@ -2,9 +2,30 @@
 
 **IMPORTANT**: This readme is only helpful to the training on the new datasets(Pepper and SWaT). Before further reading be sure to check the [original README](originalREADME.md). Since none of the original files has been modified, instructions can be followed to the letter even after installing this repository. Check correctness for the path pointing to voraus dataset files in [train.py](train.py) at line 21 (before proceeding make sure that tests end successfully).
 
-This project aims to tests the performance of the normalizing flow method MVT-Flow on datasets different from the one it has been designed on. More informations in the official paper ["The voraus-AD Dataset for Anomaly Detection
-in Robot Applications"](https://arxiv.org/pdf/2311.04765.pdf).\
-For a step-by-step configuration guide follow the [original README](originalREADME.md) guide.
+This project aims to tests the performance of the normalizing flow method MVT-Flow on datasets different from the one it has been designed on. More informations in the official paper ["The voraus-AD Dataset for Anomaly Detection in Robot Applications"](https://arxiv.org/pdf/2311.04765.pdf).\
+
+
+## Download Datasets
+Here the links to the datasets(for voraus refer to the [original README](originalREADME.md) links). Paths can be changed, they are defined in the following files: swat_ad.py, pepper_ad.py. Following are the paths used in the code:
+
+
+Voraus path: ...\voraus-ad-dataset\Dataset\voraus-ad-dataset-100hz.parquet
+
+Pepper path: ...\voraus-ad-dataset\Pepper & SWAT\pepper_csv-20240612T123704Z-001\pepper_csv\files.csv\
+[Robot Security Anomaly Detection mark (google.com)](https://sites.google.com/diag.uniroma1.it/robsec-data)
+
+SWaT path: Pepper & SWAT\SWAT\Physical-20240613T200059Z-001\Physical\files.xlsx\
+https://drive.google.com/drive/folders/1xTNQDqEFtFfDuhl75P23ZNIeGgCntRt7?usp=drive_link
+
+```
+SWaT attack dataset had to be manually filtered out, thus the file is already present in the repository. As for the normal dataset SWaT_Dataset_Normal_v0 is used. Any other file is not needed.
+```
+
+After downloading SWaT files, run [swat_create_file.py](swat_create_file.py) : 
+```
+python swat_create_file.py
+```
+to save the normal samples as a csv(this takes a while since pandas is slow at opening excel files)
 
 ## Usage: Train
 
@@ -70,26 +91,7 @@ optional arguments:
 ### Default Execution
 The default execution evaluates pepper dataset with no normalization nor downsampling, the default seed is 177 and the normal data used for evaluation constitutes 20% of the dataset(ratio=.8).
 
-## Repository Structure
-```
-voraus-ad-dataset/ 
-├── Dataset/
-│   └── Voraus dataset files
-│
-├── Pepper & SWAT/
-│   ├── Pepper normal and attack csv files
-│   └── SWaT normal and attack files, both original xlsx and modified csv
-│
-├── tests/
-│    └── read the original README
-│
-└── python files
-```
-----
-
 ## Hyperparameters
-
-
 The parameters to configure the environment and those to modify the execution of the algorithm (located at the top of the training file after imports).
 
 ```python

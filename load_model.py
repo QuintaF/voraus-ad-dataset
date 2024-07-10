@@ -188,7 +188,7 @@ def main():
     # compute mean over metrics
     m = np.array(m, dtype= object)
     m = np.mean(m, axis=0)
-    print(f"Mean precision: {m[0]}\nMean recall: {m[1]}\nMean accuracy: {m[2]}\nMean F1-score: {m[3]}")
+    print(f"Mean precision: {m[0]:.2f}\nMean recall: {m[1]:.2f}\nMean accuracy: {m[2]:.2f}\nMean F1-score: {m[3]:.2f}")
 
 if __name__ == "__main__":
     main()
